@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>StrokeGuard — Predição de Risco de AVC</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <div class="page">
+    <header class="site-header">
+      <h1 class="site-title">StrokeGuard</h1>
+      <p class="site-subtitle">Sistema de Predição de Risco de AVC</p>
+    </header>
+
+    <main class="container">
+      <form id="predict-form" class="form-card" novalidate>
+        <h2 class="form-heading">Dados do Paciente</h2>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label class="field-label" for="gender">Gênero</label>
+            <select id="gender" name="gender" required>
+              <option value="">Selecione...</option>
+              <option value="Male">Masculino</option>
+              <option value="Female">Feminino</option>
+              <option value="Other">Outro</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="age">Idade</label>
+            <input type="number" id="age" name="age" min="0" max="150" step="0.1" placeholder="Ex: 45" required>
+          </div>
+
+          <div class="form-group field-span-2">
+            <label class="field-label">Hipertensão</label>
+            <div class="radio-row">
+              <label class="radio-label">
+                <input type="radio" name="hypertension" value="1" required> Sim
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="hypertension" value="0"> Não
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group field-span-2">
+            <label class="field-label">Doença Cardíaca</label>
+            <div class="radio-row">
+              <label class="radio-label">
+                <input type="radio" name="heart_disease" value="1" required> Sim
+              </label>
+              <label class="radio-label">
+                <input type="radio" name="heart_disease" value="0"> Não
+              </label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="ever_married">Já foi casado(a)?</label>
+            <select id="ever_married" name="ever_married" required>
+              <option value="">Selecione...</option>
+              <option value="Yes">Sim</option>
+              <option value="No">Não</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="work_type">Tipo de Trabalho</label>
+            <select id="work_type" name="work_type" required>
+              <option value="">Selecione...</option>
+              <option value="children">Criança</option>
+              <option value="Govt_job">Governo</option>
+              <option value="Never_worked">Nunca trabalhou</option>
+              <option value="Private">Privado</option>
+              <option value="Self-employed">Autônomo</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="residence_type">Tipo de Residência</label>
+            <select id="residence_type" name="residence_type" required>
+              <option value="">Selecione...</option>
+              <option value="Rural">Rural</option>
+              <option value="Urban">Urbano</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="avg_glucose_level">Nível Médio de Glicose</label>
+            <input type="number" id="avg_glucose_level" name="avg_glucose_level" min="0" step="0.01" placeholder="Ex: 85.5" required>
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="bmi">IMC <span class="optional-tag">(opcional)</span></label>
+            <input type="number" id="bmi" name="bmi" min="0" step="0.1" placeholder="Ex: 28.5">
+          </div>
+
+          <div class="form-group">
+            <label class="field-label" for="smoking_status">Tabagismo</label>
+            <select id="smoking_status" name="smoking_status" required>
+              <option value="">Selecione...</option>
+              <option value="never smoked">Nunca fumou</option>
+              <option value="formerly smoked">Já fumou</option>
+              <option value="smokes">Fuma</option>
+              <option value="Unknown">Desconhecido</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" id="submit-btn" class="btn-submit">
+            Prever Risco de AVC
+          </button>
+          <div id="loading-indicator" class="loading-wrap" hidden>
+            <span class="spinner" aria-hidden="true"></span>
+            <span>Processando...</span>
+          </div>
+        </div>
+      </form>
+
+      <div id="error-area" class="error-area" hidden role="alert"></div>
+
+      <div id="result-area" class="result-area" hidden aria-live="polite">
+        <div class="result-inner">
+          <div class="result-icon" id="result-icon"></div>
+          <h3 class="result-label" id="result-label"></h3>
+          <p class="result-confidence" id="result-confidence" hidden></p>
+        </div>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <p>StrokeGuard MVP — PUC-Rio 2026</p>
+    </footer>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
