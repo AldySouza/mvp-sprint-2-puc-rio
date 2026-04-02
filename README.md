@@ -60,19 +60,34 @@ O notebook implementa as seguintes etapas:
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/<seu-usuario>/mvp-sprint-2-puc-rio.git
+git clone https://github.com/AldySouza/mvp-sprint-2-puc-rio.git
 cd mvp-sprint-2-puc-rio
 ```
 
 ### 2. Executar o Notebook (Colab)
 
-1. Abra o link do Colab acima
+1. Abra o link do Colab --> https://colab.research.google.com/drive/1nXvynvxJ2rRsbpzHnEJyNsbJ8NRp7Rs2?usp=sharing
 2. Execute **Runtime → Run All**
 3. Aguarde a conclusão (~5-10 min em CPU)
 4. O modelo será exportado como `modelo_treinado.pkl`
 5. Baixe o `.pkl` e coloque em `api/model/`
 
-### 3. Configurar o Back-end
+### 3. Início rápido (recomendado)
+
+Os passos 4, 5 e 6 abaixo podem ser substituídos pelo script de inicialização,
+que cria o ambiente virtual, instala as dependências e inicia o servidor
+automaticamente:
+
+```bash
+# Linux / macOS
+chmod +x start.sh
+./start.sh
+
+# Windows
+start.bat
+```
+
+### 4. Configurar o Back-end
 
 ```bash
 cd api
@@ -81,7 +96,19 @@ source venv/bin/activate  # Linux/macOS
 pip install -r requirements.txt
 ```
 
-### 4. Rodar os Testes (Gate de Implantação)
+### 5. Rodar os Testes (Gate de Implantação)
+
+Assim como o `start`, há um script que configura o ambiente e executa os testes automaticamente:
+
+```bash
+# Linux / macOS
+./test.sh
+
+# Windows
+test.bat
+```
+
+Ou, se preferir rodar manualmente (com o venv ativado):
 
 ```bash
 pytest test_model.py -v
@@ -89,7 +116,7 @@ pytest test_model.py -v
 
 Todos os testes devem passar para que o modelo seja considerado apto.
 
-### 5. Iniciar a Aplicação
+### 6. Iniciar a Aplicação
 
 ```bash
 python app.py
