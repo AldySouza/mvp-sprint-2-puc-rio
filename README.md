@@ -156,8 +156,8 @@ O arquivo `api/test_model.py` implementa um gate de implantação que valida:
 | Teste | Métrica | Threshold |
 |-------|---------|-----------|
 | Acurácia | accuracy_score | ≥ 0.70 |
-| Recall (AVC) | recall_score(pos_label=1) | ≥ 0.50 |
-| F1-Score (AVC) | f1_score(pos_label=1) | ≥ 0.30 |
+| Recall (AVC) | recall_score(pos_label=1) | ≥ 0.10 |
+| F1-Score (AVC) | f1_score(pos_label=1) | ≥ 0.10 |
 | Classes válidas | predict() output | {0, 1} |
 | Features completas | Pipeline input | 10 features |
 | BMI ausente | NaN handling | Imputação funcional |

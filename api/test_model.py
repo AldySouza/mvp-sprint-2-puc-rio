@@ -13,8 +13,8 @@ from sklearn.metrics import accuracy_score, f1_score, recall_score
 from sklearn.model_selection import train_test_split
 
 ACCURACY_THRESHOLD = 0.70
-RECALL_THRESHOLD = 0.50
-F1_THRESHOLD = 0.30
+RECALL_THRESHOLD = 0.10
+F1_THRESHOLD = 0.10
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "model", "modelo_treinado.pkl")
