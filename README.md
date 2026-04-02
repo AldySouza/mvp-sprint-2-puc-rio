@@ -66,7 +66,7 @@ cd mvp-sprint-2-puc-rio
 
 ### 2. Executar o Notebook (Colab)
 
-1. Abra o link do Colab --> https://colab.research.google.com/drive/1nXvynvxJ2rRsbpzHnEJyNsbJ8NRp7Rs2?usp=sharing
+1. Abra o link do Colab --> https://colab.research.google.com/drive/1HlDI4orCt7JiwtrWDoHBWtVIN3ly8GbB?usp=sharing
 2. Execute **Runtime → Run All**
 3. Aguarde a conclusão (~5-10 min em CPU)
 4. O modelo será exportado como `modelo_treinado.pkl`
