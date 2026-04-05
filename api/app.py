@@ -2,6 +2,7 @@
 
 import logging
 import os
+import socket
 import sys
 import traceback
 
@@ -125,6 +126,31 @@ def internal_error(_error):
     return jsonify({"error": "Erro interno do servidor"}), 500
 
 
+def _first_free_port(preferred: int, attempts: int = 40) -> int:
+    """Retorna a primeira porta livre a partir de *preferred* (inclusive)."""
+    for port in range(preferred, preferred + attempts):
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            try:
+                sock.bind(("0.0.0.0", port))
+            except OSError:
+                continue
+            return port
+    raise RuntimeError(
+        f"Nenhuma porta livre entre {preferred} e {preferred + attempts - 1}."
+    )
+
+
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
-    app.run(host="0.0.0.0", port=5000, debug=True)
+    preferred = int(os.environ.get("PORT", "5000"))
+    port = _first_free_port(preferred)
+    if port != preferred:
+        print(
+            f"Aviso: porta {preferred} em uso; usando {port}. "
+            "No macOS, a 5000 costuma ser o AirPlay Receiver (Ajustes do Sistema). "
+            "Para fixar uma porta: export PORT=5001 (antes de iniciar).",
+            file=sys.stderr,
+            flush=True,
+        )
+    app.run(host="0.0.0.0", port=port, debug=True)

@@ -14,27 +14,28 @@ echo   StrokeGuard MVP — Inicializacao
 echo ══════════════════════════════════════════
 echo.
 
-:: --- Python -----------------------------------------------------------
+:: --- Python (minimo 3.10; winget instala 3.11 se necessario) ------------
 set "PYTHON="
-where python >nul 2>&1
-if %errorlevel% equ 0 (
-    set "PYTHON=python"
-) else (
-    where python3 >nul 2>&1
-    if %errorlevel% equ 0 (
-        set "PYTHON=python3"
+
+call :resolve_python
+if not defined PYTHON (
+    echo   [AVISO] Python 3.10+ nao encontrado. Tentando instalar Python 3.11 via winget...
+    where winget >nul 2>&1
+    if !errorlevel! equ 0 (
+        winget install -e --id Python.Python.3.11 --accept-package-agreements --accept-source-agreements
+        call :resolve_python
     )
 )
-
-if "%PYTHON%"=="" (
-    echo   [ERRO] Python nao encontrado. Instale Python 3.10+ e tente novamente.
+if not defined PYTHON (
+    echo   [ERRO] Python 3.10+ nao encontrado. Instale manualmente em https://www.python.org/downloads/
+    echo   Ou instale o Python Launcher e execute de novo.
     pause
     exit /b 1
 )
 
-for /f "tokens=*" %%v in ('%PYTHON% -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"') do set "PY_VERSION=%%v"
-for /f "tokens=*" %%v in ('%PYTHON% -c "import sys; print(sys.version_info.major)"') do set "PY_MAJOR=%%v"
-for /f "tokens=*" %%v in ('%PYTHON% -c "import sys; print(sys.version_info.minor)"') do set "PY_MINOR=%%v"
+for /f "tokens=*" %%v in ('"%PYTHON%" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}')"') do set "PY_VERSION=%%v"
+for /f "tokens=*" %%v in ('"%PYTHON%" -c "import sys; print(sys.version_info.major)"') do set "PY_MAJOR=%%v"
+for /f "tokens=*" %%v in ('"%PYTHON%" -c "import sys; print(sys.version_info.minor)"') do set "PY_MINOR=%%v"
 
 if !PY_MAJOR! lss 3 (
     echo   [ERRO] Python !PY_VERSION! detectado. E necessario Python 3.10 ou superior.
@@ -47,6 +48,51 @@ if !PY_MAJOR! equ 3 if !PY_MINOR! lss 10 (
     exit /b 1
 )
 echo   [OK] Python !PY_VERSION! encontrado
+goto :after_python_resolve
+
+:resolve_python
+set "PYTHON="
+call :try_set_python python
+if defined PYTHON exit /b 0
+call :try_set_python python3
+if defined PYTHON exit /b 0
+where py >nul 2>&1
+if !errorlevel! equ 0 (
+    for %%V in (3.13 3.12 3.11 3.10) do (
+        if not defined PYTHON (
+            py -%%V -c "import sys; sys.exit(0 if sys.version_info>=(3,10) else 1)" 2>nul
+            if !errorlevel! equ 0 (
+                for /f "tokens=*" %%E in ('py -%%V -c "import sys; print(sys.executable)" 2^>nul') do set "PYTHON=%%E"
+            )
+        )
+    )
+)
+if defined PYTHON exit /b 0
+for %%P in (
+    "%LocalAppData%\Programs\Python\Python313\python.exe"
+    "%LocalAppData%\Programs\Python\Python312\python.exe"
+    "%LocalAppData%\Programs\Python\Python311\python.exe"
+    "%LocalAppData%\Programs\Python\Python310\python.exe"
+) do (
+    if not defined PYTHON (
+        if exist %%~P (
+            %%~P -c "import sys; sys.exit(0 if sys.version_info>=(3,10) else 1)" 2>nul
+            if !errorlevel! equ 0 set "PYTHON=%%~P"
+        )
+    )
+)
+exit /b 0
+
+:try_set_python
+set "CAND=%~1"
+where %CAND% >nul 2>&1
+if not !errorlevel! equ 0 exit /b 0
+%CAND% -c "import sys; sys.exit(0 if sys.version_info>=(3,10) else 1)" 2>nul
+if not !errorlevel! equ 0 exit /b 0
+for /f "tokens=*" %%E in ('%CAND% -c "import sys; print(sys.executable)" 2^>nul') do set "PYTHON=%%E"
+exit /b 0
+
+:after_python_resolve
 
 :: --- Virtual environment ----------------------------------------------
 if not exist "%VENV_DIR%\Scripts\activate.bat" (
@@ -88,7 +134,7 @@ echo ═════════════════════════
 echo   Iniciando servidor Flask
 echo ══════════════════════════════════════════
 echo.
-echo   URL: http://localhost:5000
+echo   URL: http://localhost:5000 (ou outra se 5000 estiver ocupada — veja * Running on abaixo)
 echo   Para encerrar: Ctrl+C
 echo.
 
